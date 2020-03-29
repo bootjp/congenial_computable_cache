@@ -12,25 +12,8 @@ type Config struct {
 type Spec struct {
 	prefix string
 	method []string // src/net/http/method.go
-
-	/*
-		prefix: /api/
-		    method:
-		      - GET
-		      - HEAD
-		      - OPTION
-		    cache:
-		      name: "api_cache"   # spec is snake_case and ascii
-		      enable: yes         # no
-		      condition: time     # or compute
-		      langage: javascript # or lua
-		      src: ../script/api.js
-	*/
+	Cache  *Cache
 }
-
-type Condition string
-
-type Language string
 
 type Cache struct {
 	Name      string
@@ -40,6 +23,10 @@ type Cache struct {
 	SRC       string
 }
 
+type Condition string
+
+type Language string
+
 func NewConfig(fp string) (*Config, error) {
 	data, err := ioutil.ReadFile(fp)
 	if err != nil {
@@ -47,7 +34,7 @@ func NewConfig(fp string) (*Config, error) {
 	}
 
 	c := &Config{}
-	err = yaml.Unmarshal([]byte(data), c)
+	err = yaml.Unmarshal(data, c)
 	if err != nil {
 		return nil, err
 	}
