@@ -1,15 +1,26 @@
 package ccc
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestLoadConfig(t *testing.T) {
+	v, err := NewConfig("./test/config_valid.yml")
+	if err != nil {
+		t.Error(err)
+	}
 	tests := []struct {
 		name     string
 		config   *Config
 		want     bool
 		hasError bool
 	}{
-		// TODO: Add test cases.
+		{
+			"valid test",
+			v,
+			true,
+			false,
+		},
 	}
 	for _, test := range tests {
 		res, err := NewCCC().LoadConfig(test.config)

@@ -5,22 +5,20 @@ import (
 	"io/ioutil"
 )
 
-type Config struct {
-	Specs []*Spec
-}
+type Config []Spec
 
 type Spec struct {
-	prefix string
-	method []string // src/net/http/method.go
-	Cache  *Cache
+	Prefix string   `yaml:"prefix"`
+	Method []string `yaml:"method"` // src/net/http/method.go
+	Cache  Cache    `yaml:"cache"`
 }
 
 type Cache struct {
-	Name      string
-	Enable    bool
-	Condition *Condition
-	Language  *Language
-	SRC       string
+	Name      string     `yaml:"name"`
+	Enable    bool       `yaml:"enable"`
+	Condition *Condition `yaml:"condition"`
+	Language  *Language  `yaml:"language"`
+	SRC       string     `yaml:"src"`
 }
 
 type Condition string
@@ -33,11 +31,11 @@ func NewConfig(fp string) (*Config, error) {
 		return nil, err
 	}
 
-	c := &Config{}
-	err = yaml.Unmarshal(data, c)
+	c := Config{}
+	err = yaml.Unmarshal(data, &c)
 	if err != nil {
 		return nil, err
 	}
 
-	return c, nil
+	return &c, nil
 }

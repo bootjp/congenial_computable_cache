@@ -1,0 +1,12 @@
+#- spexxxx:
+prefix: /api/
+method:
+  - GET
+  - HEAD
+  - OPTION
+cache:
+  name: "api_cache"    # spec is snake_case and ascii
+  enable: yes          # no
+  condition: time      # or compute
+  language: javascript # or lua
+  src: ../script/api.js

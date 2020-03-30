@@ -5,10 +5,12 @@ import (
 	"github.com/robertkrimen/otto"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type CCC struct {
-	//lock   *sync.RWMutex
+	mutex      *sync.RWMutex
+	config     *Config
 	httpServer *http.Server
 	vmPool     []*otto.Otto // todo change to resource pool
 }
@@ -20,6 +22,7 @@ func NewCCC() *CCC {
 	}
 
 	return &CCC{
+		mutex:      &sync.RWMutex{},
 		httpServer: &http.Server{},
 		vmPool:     pool,
 	}
@@ -40,5 +43,9 @@ func (c3 *CCC) Run(ctx context.Context) {
 }
 
 func (c3 *CCC) LoadConfig(conf *Config) (bool, error) {
+	c3.mutex.Lock()
+	defer c3.mutex.Unlock()
+	c3.config = conf
+
 	return true, nil
 }
